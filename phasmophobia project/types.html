@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="phas.css">
+    <title>Phas</title>
+</head>
+<body>
+<h1>Types of ghosts</h1>
+<p>There are currently 24 types of ghosts in the game.</p>
+<table class="article-table" style="margin: auto;" data-index-number="0">
+    <tbody>
+        <tr>
+            <td>Spirit</td>
+            <td>Wraith</td>
+            <td>Phantom</td>
+        </tr>
+        <tr>
+            <td>Poltergeist</td>
+            <td>Banshee</td>
+            <td>Jinn</td>
+        </tr>
+        <tr>
+            <td>Mare</td>
+            <td>Revenant</td>
+            <td>Shade</td>
+        </tr>
+        <tr>
+            <td>Demon</td>
+            <td>Yurei</td>
+            <td>Oni</td>
+        </tr>
+        <tr>
+            <td>Yokai</td>
+            <td>Hantu</td>
+            <td>Goryo</td>
+        </tr>
+        <tr>
+            <td>Myling</td>
+            <td>Onryo</td>
+            <td>The Twins</td>
+        </tr>
+        <tr>
+            <td>Raiju</td>
+            <td>Obake</td>
+            <td>The Mimic</td>
+        </tr>
+        <tr>
+            <td>Moroi</td>
+            <td>Deogen</td>
+            <td>Thaye</td>
+        </tr>
+    </tbody>
+</table>
+<h2>If any ghost is missing, feel free to add one</h2>
+<form id="ghostForm">
+    <input type="text" id="ghostName" placeholder="Ghost Name" required>
+    <button type="submit">Add Ghost</button>
+</form>
+
+<script>
+    
+    async function fetchGhosts() {
+        try {
+            const response = await fetch('http://localhost:3000/api/ghosts');
+            const ghosts = await response.json();
+            console.log(ghosts);
+        } catch (error) {
+            console.error('Error fettching ghosts:', error);
+            
+        }
+    }     
+    
+
+
+
+
+// adding a new ghost with the help of the function
+async function addGhost(event) {   
+    event.preventDefault(); // preventing page reload on form submit
+
+    const name = document.getElementById('ghostName').value;
+
+    try {
+        const response = await fetch('http://localhost:3000/api/monsterghost', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name })
+        });
+        if (response.ok) {
+            fetchGhosts();
+            document.getElementById('ghostForm').reset();
+        } else {
+            console.error('Error adding ghost');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+//event listener
+document.getElementById('ghostForm').addEventListener('submit', (e) => {
+    e.preventDefault(); // Prevents page reload
+    addGhost(e);         // Calls the function to send data
+});
+
+
+// calling function for get ghosts when loading
+window.onload = fetchGhosts;
+
+// eventlistener 
+document.getElementById('ghostForm').addEventListener('submit', addGhost);
+</script>
+
+</body>
+</html>

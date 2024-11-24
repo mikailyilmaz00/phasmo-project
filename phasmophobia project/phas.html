@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="phas.css">
+    <title>Phasmophobia</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <style>
+
+body {
+            margin: 0;
+            overflow: hidden; /* Prevent scrolling */
+        }
+        /* Style the flying ghost sign */
+        .flying-ghost {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            font-size: 24px;
+            color: red;
+            font-weight: bold;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar for navigation -->
+    <div class="sidebar">
+        <h2>Phasmophobia</h2>
+        <a href="types.html">Types of Ghosts</a>
+        <a href="equipment.html">Equipment</a>
+        <a href="evidence.html">Evidence</a>
+        <a href="p5phas.html">Explore Phasmophobia?</a>
+    </div>
+    
+    <div id="ghostSign" class="flying-ghost">👻 ALERT! GHOST DETECTED! 👻</div>
+    <!-- Main content area -->
+    <div class="main-content">
+        <h1>This is a page about a horror game named Phasmophobia</h1>
+        
+        <!-- Toggle Switch Component -->
+        
+        <h2>Info about a popular PC game</h2>
+        <p>The ghosts are very different. Not all ghosts are the same. Bear that in mind.</p>
+        
+        <h3>What kinds of ghost can you face?</h3>
+        <button id="toggleGhosts">Toggle Ghost List </button>
+        <p> See examples </p>
+        <ul id="ghostList">
+            <li>Shade</li>
+            <li>Jinn</li>
+            <li>Spirit</li>
+            <li>Wraith</li>
+            <li>etc.</li>
+        </ul>
+        <!-- Image with caption -->
+        <img src="https://steamuserimages-a.akamaihd.net/ugc/2012597977351707205/240D77C9DCEE59126C9644ED939CD965AC663AEF/?imw=512&imh=288&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=truejpg" alt="A certain ghost">
+        
+        
+        <p style="text-align: left;">This is what a ghost can look like.</p>
+        <p> If you want to know more about types of ghost, equipment and evidence to expose the ghosts, click down below.</p>
+        <!-- Buttons section -->
+        <button onclick="window.location.href='types.html';">Learn About Ghosts</button>
+        <button onclick="window.location.href='equipment.html';">Check Equipment</button>
+        <button onclick="window.location.href='Evidence.html';">See evidence</button>
+
+
+        
+        
+        <!-- Table for navigation links -->
+        
+        <table>
+            <thead>
+                <tr>
+                    <th><b>Navigation</b></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="types.html">Types of ghosts</a></td>
+                </tr>
+                <tr>
+                    <td><a href="equipment.html">Equipment</a></td>
+                </tr>
+                <tr>
+                    <td><a href="evidence.html">Evidence</a></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>EMF Reader</td>
+                    <td>Detects electromagnetic field levels</td>
+                </tr>
+                <tr>
+                    <td>Spirit Box</td>
+                    <td>Communicates with the ghost through radio frequencies</td>
+                </tr>
+                <tr>
+                    <td>Thermometer</td>
+                    <td>Detects freezing temperatures</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    
+    <script>
+    
+    function setup() {
+            createCanvas(windowWidth, windowHeight); // Create a full-window canvas
+            background(220); // Set a light gray background
+        }
+
+        function draw() {
+            background(220); // Clear the canvas
+            fill(100, 150, 200); // Set the fill color
+            ellipse(mouseX, mouseY, 50, 50); // Draw a circle at the mouse position
+        }
+
+    function moveGhostSign() {
+            const ghostSign = document.getElementById('ghostSign');
+            const maxWidth = window.innerWidth - ghostSign.offsetWidth;
+            const maxHeight = window.innerHeight - ghostSign.offsetHeight;
+            ghostSign.style.left = Math.random() * maxWidth + 'px';
+            ghostSign.style.top = Math.random() * maxHeight + 'px';
+        }
+    
+        // Move ghost every 2 seconds
+        setInterval(moveGhostSign, 2000);
+
+    // Toggle visibility of the ghost list
+    document.getElementById('toggleGhosts').addEventListener('click', function() {
+        const ghostList = document.getElementById('ghostList');
+        if (ghostList.style.display === "none") {
+            ghostList.style.display = "block";
+        } else {
+            ghostList.style.display = "none";
+        }
+    });
+    
+    // fetching to do get requests
+
+    async function fetchGhosts() {
+        try {
+            const response = await fetch('http://localhost:3000/api/ghosts');
+            const ghosts = await response.json();
+            console.log(ghosts);
+        } catch (error) {
+            console.error('Error fettching ghosts:', error);
+            
+        }
+    }     
+    
+
+
+
+
+// adding a new ghost with the help of the function
+async function addGhost(event) {   
+    event.preventDefault(); // preventing page reload on form submit
+
+    const name = document.getElementById('ghostName').value;
+
+    try {
+        const response = await fetch('http://localhost:3000/api/monsterghost', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name })
+        });
+        if (response.ok) {
+            fetchGhosts();
+            document.getElementById('ghostForm').reset();
+        } else {
+            console.error('Error adding ghost');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+document.getElementById('yourFormId').addEventListener('submit', (e) => {
+    e.preventDefault(); // Prevents page reload
+    sendData();         // Calls the function to send data
+});
+
+// calling function for get ghosts when loading
+window.onload = fetchGhosts;
+
+// eventlistener 
+document.getElementById('ghostForm').addEventListener('submit', addGhost);
+
+document.querySelectorAll('.sidebar a').forEach(link => {
+    link.addEventListener('click', function() {
+        document.querySelectorAll('.sidebar a').forEach(link => link.classList.remove('active'));
+        this.classList.add('active');
+    });
+});
+
+
+
+</script>
+
+
+</body>
+</html>

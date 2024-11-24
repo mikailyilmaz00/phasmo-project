@@ -1,0 +1,29 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #282c34; 
+    color: #ffffff; /* White text for contrast */
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+    background-color: #3a3f47; /* Lighter dark color for header */
+    color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); 
+    position: fixed; 
+    width: 100%; 
+    z-index: 1000; 
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 80px);
+    margin-top: 80px; 
+}
+
+canvas {
+    border: 1px solid #ffffff; 
+}
